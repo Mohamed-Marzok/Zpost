@@ -1,0 +1,51 @@
+import { useForm, SubmitHandler } from "react-hook-form";
+import Input from "./ui/Input";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Button from "./ui/Button";
+import { loginInputs } from "../data";
+import { loginSchema } from "../validation";
+import { useDispatch } from "react-redux";
+import { TDispatch } from "../redux/store";
+import { userLogin } from "../redux/UserSlice";
+
+interface IFormInput {
+  username: string;
+  password: string;
+}
+
+export default function LoginForm() {
+  const dispatch: TDispatch = useDispatch(); // No need to manually type dispatch
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IFormInput>({
+    resolver: yupResolver(loginSchema),
+  });
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data);
+    dispatch(userLogin(data)); // Dispatch the login action
+  };
+
+  const formInputsList = loginInputs.map((input) => {
+    return (
+      <Input
+        key={input.name}
+        label={input.lable} // Fixed the typo here
+        {...register(input.name as keyof IFormInput)}
+        errormsg={errors[input.name as keyof IFormInput]?.message}
+      />
+    );
+  });
+
+  return (
+    <form
+      className="container mx-auto p-2 md:w-1/2 mt-10 grow flex flex-col justify-center"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {formInputsList}
+      <Button />
+    </form>
+  );
+}
