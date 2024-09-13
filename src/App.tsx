@@ -3,10 +3,10 @@ import MainPage from "./pages/MainPage";
 import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 import SignForm from "./components/SignForm";
-import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
 import { TState } from "./redux/store";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const token = useSelector((state: TState) => state.user.token);
@@ -34,8 +34,9 @@ function App() {
           }
         />
         <Route path="signup" element={<SignForm />} />
-        <Route path="profile" element={<Profile />} />
+        <Route path="profile" element={<Home />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

@@ -3,6 +3,9 @@ import { Post } from "../../interfaces";
 import Comments from "../Comments";
 import PostEditDeleteBtn from "../PostEditDeleteBtn";
 import * as React from "react";
+import { useSelector } from "react-redux";
+import { TState } from "../../redux/store";
+
 // Define the props interface
 interface IProps {
   post: Post;
@@ -12,7 +15,7 @@ export default function PostCard({ post }: IProps) {
   const [openComments, setOpenComments] = useState(false);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-
+  const user = useSelector((state: TState) => state.user.user);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -41,28 +44,24 @@ export default function PostCard({ post }: IProps) {
     <div className="max-w-md mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg  my-4 overflow-y-auto overflow-x-hidden relative">
       {!openComments ? (
         <>
-          <PostEditDeleteBtn
-            anchorRef={anchorRef}
-            handleClose={handleClose}
-            handleListKeyDown={handleListKeyDown}
-            open={open}
-            handleToggle={handleToggle}
-            postId={post.id}
-          />
+          {user?.id === post.author.id ? (
+            <PostEditDeleteBtn
+              anchorRef={anchorRef}
+              handleClose={handleClose}
+              handleListKeyDown={handleListKeyDown}
+              open={open}
+              handleToggle={handleToggle}
+              postId={post.id}
+            />
+          ) : null}
           {/* Post image */}
-          {post.image ? (
+          {Object.keys(post.image).length > 0 ? (
             <img
               className="w-full h-72 object-cover"
               src={post.image}
               alt="Post"
             />
-          ) : (
-            <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-              <span className="text-gray-500 dark:text-gray-300">
-                No Image Available
-              </span>
-            </div>
-          )}
+          ) : null}
 
           <div className="p-4">
             {/* Title */}
@@ -77,8 +76,15 @@ export default function PostCard({ post }: IProps) {
             <div className="flex items-center">
               <img
                 className="w-10 h-10 rounded-full object-cover mr-3"
-                src={post.author.profile_image}
-                alt={post.author.name}
+                src={
+                  post?.author?.profile_image &&
+                  Object.keys(post.author.profile_image).length !== 0
+                    ? post.author.profile_image
+                    : "http://tarmeezacademy.com/images/users/pScJVTfbX3aT9vK.jpg"
+                }
+                alt={`${
+                  post?.author?.name || "Default User"
+                }'s profile picture`}
               />
               <div>
                 <p className="font-semibold text-gray-700 dark:text-gray-200">
@@ -91,11 +97,11 @@ export default function PostCard({ post }: IProps) {
             </div>
 
             {/* Comments and Tags */}
-            <div
-              className="mt-4 flex items-center justify-between cursor-pointer"
-              onClick={() => setOpenComments(true)}
-            >
-              <p className="text-gray-600 dark:text-gray-300">
+            <div className="mt-4 flex items-center justify-between ">
+              <p
+                className="text-gray-600 dark:text-gray-300 cursor-pointer"
+                onClick={() => setOpenComments(true)}
+              >
                 Comments: {post.comments_count}
               </p>
               {/* Tags */}

@@ -2,18 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { instanceAxios } from "../config";
 import { Post } from "../interfaces";
 
-// Define types for Post, Author, Links, Meta, and the overall API response
-// interface Author {
-//   id: number;
-//   username: string;
-//   name: string;
-//   email: string;
-//   profile_image: object;
-//   is_fake: number;
-//   created_at: string;
-//   updated_at: string;
-// }
-
 interface Links {
   first: string;
   last: string;
@@ -40,13 +28,15 @@ interface PostsState {
   posts: Post[];
   links: Links | null;
   meta: Meta | null;
+  isLoading: boolean;
+  error: boolean;
 }
 
 // Fetching posts
 export const getPosts = createAsyncThunk<PostsResponse, number>(
   "posts/getPosts",
   async (currentPage: number) => {
-    const response = await instanceAxios(`/posts?limit=5&page=${currentPage}`);
+    const response = await instanceAxios(`/posts?limit=15&page=${currentPage}`);
     console.log(response);
     return response.data;
   }
@@ -59,14 +49,27 @@ export const postsSlice = createSlice({
     posts: [],
     links: null,
     meta: null,
+    isLoading: false,
+    error: false,
   } as PostsState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getPosts.fulfilled, (state, action) => {
-      state.posts = action.payload.data;
-      state.links = action.payload.links;
-      state.meta = action.payload.meta;
-    });
+    builder
+      .addCase(getPosts.fulfilled, (state, action) => {
+        state.posts = action.payload.data;
+        state.links = action.payload.links;
+        state.meta = action.payload.meta;
+        state.isLoading = false;
+        state.error = false;
+      })
+      .addCase(getPosts.pending, (state) => {
+        state.isLoading = true;
+        state.error = false;
+      })
+      .addCase(getPosts.rejected, (state) => {
+        state.isLoading = false;
+        state.error = true;
+      });
   },
 });
 

@@ -27,7 +27,7 @@ export const signSchema = yup
       .required("Password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must be at least 8 characters with an uppercase, a lowercase, a digit, and a special character"
+        "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character"
       ),
     confirmPassword: yup
       .string()

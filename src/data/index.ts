@@ -1,12 +1,17 @@
-import { IAddPostInput, ILoginInput, ISignupInput } from "../interfaces";
+import {
+  IAddPostInput,
+  IEditPostInput,
+  ILoginInput,
+  ISignupInput,
+} from "../interfaces";
 
 export const loginInputs: ILoginInput[] = [
   {
-    lable: "Email",
+    lable: "email",
     name: "username",
   },
   {
-    lable: "Password",
+    lable: "password",
     name: "password",
   },
 ];
@@ -15,38 +20,58 @@ export const signupInputs: ISignupInput[] = [
   {
     lable: "First Name",
     name: "firstname",
+    type: "text",
   },
   {
     lable: "Last Name",
     name: "lastname",
+    type: "text",
   },
   {
-    lable: "Email",
+    lable: "email",
     name: "email",
+    type: "email",
   },
   {
-    lable: "Password",
+    lable: "image",
+    name: "image",
+    type: "file",
+  },
+  {
+    lable: "password",
     name: "password",
+    type: "password",
   },
   {
-    lable: "confirm Password",
+    lable: "Confirm Password",
     name: "confirmPassword",
+    type: "password",
   },
 ];
 export const addPostInputs: IAddPostInput[] = [
   {
-    lable: "Title",
+    lable: "title",
     name: "title",
     type: "text",
   },
   {
-    lable: "Body",
+    lable: "body",
     name: "body",
     type: "text",
   },
   {
-    lable: "Image",
+    lable: "image",
     name: "image",
     type: "file",
+  },
+];
+export const editPostInputs: IEditPostInput[] = [
+  {
+    lable: "title",
+    name: "title",
+  },
+  {
+    lable: "body",
+    name: "body",
   },
 ];

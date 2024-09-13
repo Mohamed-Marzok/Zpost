@@ -4,12 +4,24 @@ export interface ILoginInput {
 }
 export interface ISignupInput {
   lable: string;
-  name: "email" | "password" | "firstname" | "lastname" | "confirmPassword";
+  name:
+    | "email"
+    | "password"
+    | "firstname"
+    | "lastname"
+    | "confirmPassword"
+    | "image";
+  type: string;
 }
 export interface IAddPostInput {
   lable: string;
   name: "title" | "body" | "image";
-  type: string;
+  type?: string;
+}
+export interface IEditPostInput {
+  lable: string;
+  name: "title" | "body";
+  type?: string;
 }
 // Define the Post interface
 export interface Author {
@@ -29,14 +41,16 @@ export interface Comment {
   body: string;
   author: Author;
 }
-
+interface ITag {
+  name: string;
+}
 export interface Post {
   id: number;
   title: string | null;
   body: string;
   author: Author;
   image: string;
-  tags: string[];
+  tags: ITag[];
   created_at: string;
   comments_count: number;
   comments: Comment[];
